@@ -191,6 +191,10 @@ function session(options) {
       return
     }
 
+    // my change
+    // change for dynamically changing cookie Name
+    var dynamicCookieName = req.url.split('/')[3] || name;
+
     // pathname mismatch
     var originalPath = parseUrl.original(req).pathname || '/'
     if (originalPath.indexOf(cookieOptions.path || '/') !== 0) return next();
@@ -214,7 +218,7 @@ function session(options) {
     req.sessionStore = store;
 
     // get the session ID from the cookie
-    var cookieId = req.sessionID = getcookie(req, name, secrets);
+    var cookieId = req.sessionID = getcookie(req, dynamicCookieName, secrets);
 
     // set-cookie
     onHeaders(res, function(){
@@ -240,7 +244,7 @@ function session(options) {
       }
 
       // set cookie
-      setcookie(res, name, req.sessionID, secrets[0], req.session.cookie.data);
+      setcookie(res, dynamicCookieName, req.sessionID, secrets[0], req.session.cookie.data);
     });
 
     // proxy end() to commit the session
