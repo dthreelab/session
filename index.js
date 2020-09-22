@@ -31,7 +31,8 @@ var Store = require('./session/store')
 // environment
 
 var env = process.env.NODE_ENV;
-
+// checking for objectID to make it in Object ID format.
+const checkForHexRegExp = new RegExp('^[0-9a-fA-F]{24}$');
 /**
  * Expose the middleware.
  */
@@ -193,7 +194,11 @@ function session(options) {
 
     // my change
     // change for dynamically changing cookie Name
-    var dynamicCookieName = req.url.split('/')[3] || name;
+    var dynamicCookieName = name;
+    // checking for the ObjectID.
+    if (checkForHexRegExp.test(req.url.split('/')[3])) {
+      dynamicCookieName = req.url.split('/')[3];
+    }
 
     // pathname mismatch
     var originalPath = parseUrl.original(req).pathname || '/'
